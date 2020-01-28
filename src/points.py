@@ -24,7 +24,7 @@ def belongs_to_line(p1, p2, p3):
 
 
 def points(input):
-    """Takes iterable(set points - for example), returns set of lines"""
+    """Takes iterable(set of points - for example), returns set of lines"""
     output = set()
     for triple in combinations(input, 3):
         line = belongs_to_line(*triple)
