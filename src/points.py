@@ -9,14 +9,16 @@ Line = namedtuple('Line', ['a', 'b'])
 Point = namedtuple('Point', ['x', 'y'])
 
 
-class CoordinateTypeError(TypeError):
-    message = 'A coordinate must be either numeric or Fraction'
-
+class StrMixin:
     def __str__(self):
         return self.message
 
 
-class PointTypeError(TypeError):
+class CoordinateTypeError(StrMixin, TypeError):
+    message = 'A coordinate must be either numeric or Fraction'
+
+
+class PointTypeError(StrMixin, TypeError):
     message = 'A point must be an instance of Point'
 
 
