@@ -1,3 +1,5 @@
+from fractions import Fraction
+
 import pytest
 from faker import Faker
 
@@ -19,6 +21,6 @@ def coordinate():
     fake = Faker()
 
     def _coordinate():
-        return fake.pyint(min_value=-100, max_value=100, step=1)
+        return Fraction(fake.pyfloat(min_value=-100, max_value=100))
 
     return _coordinate

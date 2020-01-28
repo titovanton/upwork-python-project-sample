@@ -1,3 +1,5 @@
+import functools
+import numbers
 from collections import namedtuple
 from fractions import Fraction
 from itertools import combinations
@@ -5,6 +7,17 @@ from itertools import combinations
 
 Line = namedtuple('Line', ['a', 'b'])
 Point = namedtuple('Point', ['x', 'y'])
+
+
+class CoordinateTypeError(TypeError):
+    message = 'A coordinate must be either numeric or Fraction'
+
+    def __str__(self):
+        return self.message
+
+
+class PointTypeError(TypeError):
+    message = 'A point must be an instance of Point'
 
 
 def belongs_to_line(p1, p2, p3):
@@ -23,8 +36,39 @@ def belongs_to_line(p1, p2, p3):
     return None
 
 
+def validate_input(func):
+    """
+    Validates input to be iterable of Point and every coordinate must be either numeric or Fraction.
+    If it's numeric, then the validator converts it to Fraction.
+    PS: must not make a side effect on the origin input value!
+    """
+    def _to_fraction(point):
+        if not isinstance(point, Point):
+            raise PointTypeError()
+        x = point.x
+        y = point.y
+        if isinstance(x, numbers.Number):
+            x = Fraction(x)
+        if isinstance(y, numbers.Number):
+            y = Fraction(y)
+        if not (isinstance(x, Fraction) and isinstance(y, Fraction)):
+            raise CoordinateTypeError()
+        return Point(x, y)
+
+    @functools.wraps(func)
+    def wrapper(input):
+        _input = {_to_fraction(point) for point in input}
+        return func(_input)
+
+    return wrapper
+
+
+@validate_input
 def points(input):
-    """Takes iterable(set of points - for example), returns set of lines"""
+    """Takes iterable(set of points - for example), returns set of lines
+
+    :param input: iterable[Point(<int|Fraction>, <int|Fraction>)]
+    """
     output = set()
     for triple in combinations(input, 3):
         line = belongs_to_line(*triple)

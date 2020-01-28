@@ -1,7 +1,9 @@
 import random
 from fractions import Fraction
 
-from src.points import Point, Line, points
+import pytest
+
+from src.points import Point, Line, points, CoordinateTypeError, PointTypeError
 
 
 class TestPoints:
@@ -26,3 +28,15 @@ class TestPoints:
         output = points(input)
         subset = {Line(a, b)}
         assert output.issuperset(subset)
+
+    def test_invalid_data(self):
+        base_input = {Point(0, 0), Point(1, 1), Point(2, 2)}
+        input = base_input.union({Point('10', 10)})
+        with pytest.raises(CoordinateTypeError):
+            points(input)
+        input = base_input.union({Point(object, 10)})
+        with pytest.raises(CoordinateTypeError):
+            points(input)
+        input = base_input.union({(1, 12)})
+        with pytest.raises(PointTypeError):
+            points(input)
