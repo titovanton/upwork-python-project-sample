@@ -17,6 +17,8 @@ def example_output():
 @pytest.fixture()
 def coordinate():
     fake = Faker()
+
     def _coordinate():
         return fake.pyint(min_value=-100, max_value=100, step=1)
+
     return _coordinate
