@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+
+  points:
+    build: .
+    image: points:anton
+    user: docker:docker
+    command: ping github.com
+    env_file: .env
+    environment:
+      - "PYTHONUNBUFFERED=1"
+    volumes:
+      - ./:/app
+
+  flake:
+    image: flake:anton
+    command: bash -c "cd /home/docker && gulp"
+    user: docker:docker
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./:/app

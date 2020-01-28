@@ -1,0 +1,6 @@
+Faker==4.0.0
+
+# tests
+pytest==5.3.4
+pytest-cov==2.8.1
+pytest-xdist==1.31.0
